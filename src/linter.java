@@ -28,7 +28,13 @@ public class linter {
             if (!endsNewline(buff))
                 System.out.println("File " + file + "should end with a newline character. ");
 
-            buff.close();
+            boolean braces[] = checkBraces(line);
+            if (!braces[0])
+                System.out.println(lineNum + ". Open curly brace should not stand-alone.");
+            if (!braces[1])
+                System.out.println(lineNum + ". Closing curly brace should stand-alone.");
+
+                buff.close();
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -41,9 +47,9 @@ public class linter {
      * @return True if the line ends properly
      */
     public static boolean hasSemicolon(String line) {
-        if (line.contains("{")) {
+        if (line.matches("\\{")) {
             return true;
-        } else if (line.contains("}")) {
+        } else if (line.matches("\\}")) {
             return true;
         } else
             return line.endsWith(";");
@@ -56,7 +62,7 @@ public class linter {
      * @return True if there is trailing whitespace on the line
      */
     public static boolean trailingWhitespace(String line) {
-        if (line.matches(".*/s*"))
+        if (line.matches(".*\\s*"))
             return true;
         else return false;
     }
@@ -73,8 +79,22 @@ public class linter {
         while (scanMan.hasNextLine()) {
             currLine = scanMan.nextLine();
         }
-        if (currLine.matches(".*\n"))
+        if (currLine.matches(".*\\n"))
             return true;
         else return false;
+    }
+
+    public static boolean[] checkBraces(String line) {
+        boolean braces[] = new boolean[2];
+        //braces[0] will check opening brace
+        //braces[1] will check closing brace
+        if (line.matches("\\s*\\{\\s*")) {
+            braces[0] = false;
+        } else braces[0] = true;
+        if (line.matches("\\{.*\\}")) {
+            braces[1] = false;
+        } else braces[1] = true;
+
+        return braces;
     }
 }
