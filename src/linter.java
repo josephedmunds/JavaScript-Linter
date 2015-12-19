@@ -9,18 +9,15 @@ import java.util.Scanner;
 
 public class linter {
 
-    public static void main(String[] args) {
+    public static void main(String[] args)  {
         File file = new File("test.js");
         Scanner scanLinter;
-
         try {
             scanLinter = new Scanner(file);
-
 
             String line = scanLinter.nextLine();
             int lineNum = 1;
             boolean flag = false;
-
 
             while (scanLinter.hasNextLine()) {
                 if (!hasSemicolon(line))
@@ -57,6 +54,7 @@ public class linter {
                 }
 
 
+
                 line = scanLinter.nextLine();
 
                 if (!scanLinter.hasNextLine()) {
@@ -64,8 +62,6 @@ public class linter {
                     if (!flag)
                         System.out.println("File " + file + " should end with a newline character. TEST SPOT 2");
                 }
-
-
 
                 lineNum++;
             }
@@ -78,7 +74,6 @@ public class linter {
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         }
-
     }
 
     /**
@@ -117,7 +112,7 @@ public class linter {
      * @return True if the file properly ends in a newline
      */
     public static boolean endsNewline(String currLine) {
-            return currLine.matches(".*{1}\\n");
+            return currLine.matches(".*\\n");
     }
 
     /**
