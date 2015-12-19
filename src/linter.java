@@ -10,7 +10,7 @@ import java.util.Scanner;
 public class linter {
 
     public static void main(String[] args)  {
-        File file = new File("test.js");
+        File file = new File(args[0]);
         Scanner scanLinter;
         try {
             scanLinter = new Scanner(file);
