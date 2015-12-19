@@ -14,12 +14,14 @@ public class linter {
         Scanner scanLinter;
         try {
             scanLinter = new Scanner(file);
-
-            String line = scanLinter.nextLine();
+            String line = "";
+            if (scanLinter.hasNextLine()) {
+                line = scanLinter.nextLine();
+            }
             int lineNum = 1;
-            boolean flag = false;
+            boolean processing = true;
 
-            while (scanLinter.hasNextLine()) {
+            while (processing) {
                 if (!hasSemicolon(line))
                     System.out.println(lineNum + ". Statement should end with a semicolon.");
                 if (trailingWhitespace(line))
@@ -39,36 +41,25 @@ public class linter {
                 if (quotes[1] && !quotes[2])
                     System.out.println(lineNum + ". Should use single quotes. ");
 
-                if (oneStatement(line))
-                    System.out.println(lineNum + ". Use only one statement per line. ");
                 if (lineLength(line))
                     System.out.println(lineNum + ". Line should not be longer than 80 characters. ");
-                if (line.matches(""))
-                    flag = true;
-                else flag = false;
+                if (oneStatement(line))
+                    System.out.println(lineNum + ". Use only one statement per line. ");
+
 
                 if (!scanLinter.hasNextLine()) {
-                    System.out.println("End of File reached and " + flag);
-                    if (!flag)
-                        System.out.println("File " + file + " should end with a newline character. TEST SPOT 1");
+                    if (!endsNewline(line)) {
+                        System.out.println("File " + file + " should end with a newline character.");
+                    }
                 }
-
-
-
-                line = scanLinter.nextLine();
-
-                if (!scanLinter.hasNextLine()) {
-                    System.out.println("End of File reached and " + flag);
-                    if (!flag)
-                        System.out.println("File " + file + " should end with a newline character. TEST SPOT 2");
+                processing = false;
+                if (scanLinter.hasNextLine()) {
+                    processing = true;
+                    line = scanLinter.nextLine();
                 }
 
                 lineNum++;
             }
-
-            if (!scanLinter.hasNextLine())
-                if(!endsNewline(line))
-                    System.out.println("File " + file + " should end with a newline character. TEST SPOT 3");
 
             scanLinter.close();
         } catch (FileNotFoundException e) {
@@ -112,7 +103,7 @@ public class linter {
      * @return True if the file properly ends in a newline
      */
     public static boolean endsNewline(String currLine) {
-            return currLine.matches(".*\\n");
+            return currLine.matches("");
     }
 
     /**
@@ -170,8 +161,6 @@ public class linter {
      */
     public static boolean lineLength(String line) {
         int lineLength = line.length();
-        if (lineLength > 80)
-            return true;
-        else return false;
+        return lineLength > 80;
     }
 }
